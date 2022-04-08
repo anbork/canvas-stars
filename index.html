@@ -48,9 +48,6 @@
 	      }
 	      ctx.lineTo(cx,cy-outerRadius);
 	      ctx.closePath();
-	      ctx.lineWidth=1;
-	      ctx.strokeStyle='black';
-	      ctx.stroke();
 	      ctx.fillStyle=fill;
 	      ctx.fill();
 				return {
@@ -69,11 +66,11 @@
 			}
 
 			var stars = [
-		    drawStar(50,50,5,40,15, 'blue'),
 		    drawStar(150,50,5,40,15, 'red'),
 		    drawStar(250,50,5,40,15, 'green'),
+		    drawStar(50,50,5,40,15, 'blue'),
 		    drawStar(350,50,5,40,15, 'yellow'),
-		    drawStar(450,50,5,40,15, 'purple')
+		    drawStar(450,50,5,40,15, 'black')
 			]
 
 			canvas.addEventListener('click', function(event) {
