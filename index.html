@@ -1,0 +1,94 @@
+
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Canvas</title>
+		<style>
+			canvas {
+				border: 1px solid Black;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas" width="500" height="100">
+		</canvas>
+		<canvas id="square" width="100" height="100">
+		</canvas>
+		<script>
+
+			var canvas=document.getElementById("canvas");
+	    var ctx=canvas.getContext("2d");
+			
+			var square=document.getElementById("square");
+	    var squareCtx=square.getContext("2d");
+			squareCtx.beginPath();
+			squareCtx.rect(0, 0, 100, 100);
+	    squareCtx.closePath();
+
+	    function drawStar(cx,cy,spikes,outerRadius,innerRadius,fill){
+	      var rot=Math.PI/2*3;
+	      var x=cx;
+	      var y=cy;
+	      var step=Math.PI/spikes;
+				var points = []
+	      ctx.beginPath();
+	      ctx.moveTo(cx,cy-outerRadius)
+	      for(i=0;i<spikes;i++){
+	        x=cx+Math.cos(rot)*outerRadius;
+	        y=cy+Math.sin(rot)*outerRadius;
+					points.push({x: x,y: y})
+	        ctx.lineTo(x,y)
+	        rot+=step
+	        x=cx+Math.cos(rot)*innerRadius;
+	        y=cy+Math.sin(rot)*innerRadius;
+					points.push({x: x,y: y})
+	        ctx.lineTo(x,y)
+	        rot+=step
+	      }
+	      ctx.lineTo(cx,cy-outerRadius);
+	      ctx.closePath();
+	      ctx.lineWidth=1;
+	      ctx.strokeStyle='black';
+	      ctx.stroke();
+	      ctx.fillStyle=fill;
+	      ctx.fill();
+				return {
+					points: points,
+					fill: fill
+				}
+	    }
+
+			function insideStar(points, pointx, pointy) {
+			    var i, j;
+			    var inside = false;
+			    for (i = 0, j = points.length - 1; i < points.length; j = i++) {
+			        if(((points[i].y > pointy) != (points[j].y > pointy)) && (pointx < (points[j].x-points[i].x) * (pointy-points[i].y) / (points[j].y-points[i].y) + points[i].x) ) inside = !inside;
+			    }
+			    return inside;
+			}
+
+			var stars = [
+		    drawStar(50,50,5,40,15, 'blue'),
+		    drawStar(150,50,5,40,15, 'red'),
+		    drawStar(250,50,5,40,15, 'green'),
+		    drawStar(350,50,5,40,15, 'yellow'),
+		    drawStar(450,50,5,40,15, 'purple')
+			]
+
+			canvas.addEventListener('click', function(event) {
+				var rect = canvas.getBoundingClientRect();
+				var x = event.clientX - rect.left;
+				var y = event.clientY - rect.top;
+				
+				squareCtx.fillStyle= 'white';
+				stars.forEach(function(star) {
+					if (insideStar(star.points, x, y)) {
+						squareCtx.fillStyle=star.fill;
+					}
+				})
+				squareCtx.fill();
+			})
+		</script>
+	</body>
+</html>
